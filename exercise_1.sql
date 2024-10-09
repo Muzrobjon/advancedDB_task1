@@ -87,23 +87,27 @@ from northwind.products;
 DO
 $$
 DECLARE
-	--declaring the cursor
-	order_cursor CURSOR FOR
-				SELECT *
-				FROM northwind.orders;
-	order_rec RECORD;
-	order_total NUMERIC;
+   
+    order_cursor CURSOR FOR
+        SELECT OrderID FROM northwind.orders;
+    order_rec RECORD; 
+    order_total NUMERIC; 
 BEGIN
-	OPEN order_cursor; 
-	LOOP
-		FETCH NEXT FROM order_cursor INTO order_rec; 
-		EXIT WHEN NOT FOUND; -- exiting if no row left
-		
-		order_total = northwind.calculate_order_total(order_rec.orderid); 
-		
-		RAISE NOTICE 'Order id: %, Total: %', order_rec.orderid, order_total;
-	END LOOP;
-	
-	CLOSE order_cursor;
+    -- Open the cursor
+    OPEN order_cursor; 
+
+    
+    LOOP
+        FETCH NEXT FROM order_cursor INTO order_rec; 
+        EXIT WHEN NOT FOUND; 
+
+           order_total := calculate_order_total(order_rec.OrderID); 
+
+          RAISE NOTICE 'Order ID: %, Total: %', order_rec.OrderID, order_total;
+    END LOOP;
+
+ 
+    CLOSE order_cursor;
 END;
 $$;
+
