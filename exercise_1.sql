@@ -11,7 +11,7 @@ BEGIN
   JOIN northwind.order_details od USING(orderid)
     WHERE od.orderid = order_id;
 
-    RETURN total;
+    RETURN round(total,2);
 END;
 $$
 LANGUAGE plpgsql;
