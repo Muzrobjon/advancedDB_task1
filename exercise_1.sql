@@ -1,27 +1,22 @@
 --Exercise 1: Create a PostgreSQL Function
-CREATE PROCEDURE update_stock(product_id INT, quantity INT)
-LANGUAGE plpgsql
-AS
-$$
+CREATE OR REPLACE FUNCTION calculate_order_total(order_id INT)
+RETURNS NUMERIC
+AS $$
+DECLARE
+    total NUMERIC;
 BEGIN
-    UPDATE northwind.products
-    SET UnitsInStock = UnitsInStock + quantity
-    WHERE "productid" = product_id;
-  
-  IF NOT FOUND THEN
-    RAISE EXCEPTION 'This product id #% is not found!!', product_id;
-  END IF;
+    SELECT SUM(od.unitprice * od.quantity * (1 - od.discount))
+    INTO total
+    FROM northwind.orders o
+  JOIN northwind.order_details od USING(orderid)
+    WHERE od.orderid = order_id;
+
+    RETURN total;
 END;
-$$;
-select * from northwind.products;
---to check error
-CALL update_stock(1111, 50);
+$$
+LANGUAGE plpgsql;
 
-
-CALL update_stock(20, 5);
-SELECT * FROM northwind.products WHERE productid = 20;
-
-DROP PROCEDURE update_stock(product_id INT, quantity INT);
+select calculate_order_total(5);
 --Exercise 2: Implement a Stored Procedure
 CREATE PROCEDURE update_stock(product_id INT, quantity INT)
 LANGUAGE plpgsql
