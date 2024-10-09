@@ -82,7 +82,7 @@ WHERE ProductID = 11;
 select *
 from northwind.products;
 
-
+--Exercise 4: Utilize Cursors in PL/pgSQL
 
 DO
 $$
