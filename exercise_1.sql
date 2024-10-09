@@ -1,3 +1,52 @@
+--Exercise 1: Create a PostgreSQL Function
+CREATE PROCEDURE update_stock(product_id INT, quantity INT)
+LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    UPDATE northwind.products
+    SET UnitsInStock = UnitsInStock + quantity
+    WHERE "productid" = product_id;
+  
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'This product id #% is not found!!', product_id;
+  END IF;
+END;
+$$;
+select * from northwind.products;
+--to check error
+CALL update_stock(1111, 50);
+
+
+CALL update_stock(20, 5);
+SELECT * FROM northwind.products WHERE productid = 20;
+
+DROP PROCEDURE update_stock(product_id INT, quantity INT);
+--Exercise 2: Implement a Stored Procedure
+CREATE PROCEDURE update_stock(product_id INT, quantity INT)
+LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    UPDATE northwind.products
+    SET UnitsInStock = UnitsInStock + quantity
+    WHERE "productid" = product_id;
+  
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'This product id #% is not found!!', product_id;
+  END IF;
+END;
+$$;
+select * from northwind.products;
+-- this is for exception check, this is no product id 1111 , it should give error message
+CALL update_stock(1111, 50);
+
+-- updating product id 20 
+CALL update_stock(20, 10);
+-- to check updating value
+SELECT * FROM northwind.products WHERE productid = 20;
+-- to fix this error: ERROR:  function "update_stock" already exists with same argument types 
+DROP PROCEDURE update_stock(product_id INT, quantity INT);
 --exercise 3
 -- Create a new table to log price updates
 CREATE TABLE northwind.price_update_log (
